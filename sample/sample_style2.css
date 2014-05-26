@@ -1,0 +1,61 @@
+ 
+
+  /* **************************************************************************
+
+		CSS for spot_jsbelib.js demo project
+		Geoffrey Wang / KKLabs Inc.
+		v.0.2 (2015/05/26)
+		
+   ************************************************************************** */
+
+
+ /* ************************************************************************** */
+ /*
+	document basic
+ */
+ /* ************************************************************************** */
+
+@charset "utf-8";
+
+body {
+	margin: 0px;
+	padding: 0px;
+	font-size: 16px;
+	line-height: 22px;
+	background-color: #fff;
+	overflow: hidden;
+}
+
+h2
+{
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	font-size: 22px;
+	z-index: 999;
+}
+
+#mainArea
+{
+	position: absolute;
+}
+
+#beaconArea
+{
+	position: absolute;
+}
+
+.beaconItem
+{
+	position: absolute;
+	z-index: 100;
+	background-image: url(beacon_icon.png);
+	background-position: center left;
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+	padding-left: 22px;
+	padding-top: 2; 
+	height: 24px;
+	min-width: 100px;
+	font-size: 12px;
+}

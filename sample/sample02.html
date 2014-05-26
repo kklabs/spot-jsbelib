@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Spot Jsbelib Sample02</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<link href="sample_style.css" rel="stylesheet" type="text/css" media="all" />
+
+		<script	type="text/javascript" src="jquery.min.js"></script>	
+    <script type="text/javascript" src="spot_jsbelib.js"></script>
+		<script type="text/javascript">
+	
+        //create beaconManager instance
+        var beaconManager=new spotJsBEL();
+        
+        var pxDisplayString = ["Unknown","Immediate","Near","Far"];
+
+        // define beacon event handler
+        var beaconHandler = function(beaconArray) { 
+            
+            $("#beaconList").html("");
+
+            // traversal each beacon data and display
+            for(var i=0;i<beaconArray.length;i++) 
+            {      
+
+              $("#beaconList").append("<li>"+beaconArray[i].name+" "+beaconArray[i].id+" "+pxDisplayString[beaconArray[i].px]);
+            }
+
+            // get if bluetooth device power on
+            var isBLEOn = beaconManager.isBTurnOn();
+            if(isBLEOn==true)
+              $("#bleOn").html("<span style='color: green'>YES</span>");
+            else
+              $("#bleOn").html("<span style='color: red'>NO</span>");
+        } 
+
+        // set beacon event handler as callback function
+        beaconManager.onBeaconChanged(beaconHandler);
+
+
+        $(window).load(function() {
+
+            // init beaconManager
+            beaconManager.init();
+
+            // ** get Bluetooth 4.0 support status to show
+
+            var isBLEDevice =  beaconManager.isBLESupport();
+
+            if(isBLEDevice==true)
+              $("#bleSupport").html("<span style='color: green'>YES</span>");
+            else
+              $("#bleSupport").html("<span style='color: red'>NO</span>");
+
+        })
+
+
+		</script>
+	
+	</head>
+	<body>
+  <h2>Sample 02: Event-based Beacon Data Receiver</h2>
+  <ul>
+    <li>Is this device support Bluetooth 4.0? <span id="bleSupport"></span>
+    <li>Is bluetooth radio turn on? <span id="bleOn"></span>
+    <li>Beacon Found: <ul id="beaconList"></ul>
+  </ul>
+	</body>
+</html>

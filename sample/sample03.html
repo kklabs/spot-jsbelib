@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Porta Jsbelib Sample03</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<link href="sample_style2.css" rel="stylesheet" type="text/css" media="all" />
+
+		<script	type="text/javascript" src="jquery.min.js"></script>	
+    <script type="text/javascript" src="spot_jsbelib.js"></script>
+		<script type="text/javascript">
+	
+        var beaconManager=new spotJsBEL();
+        
+        var pxDisplayValue = [220,20,75,150];
+      
+        var calcCenter={};
+        var calcWidth=0;
+
+        var windowHeight;
+        var windowWidth;
+
+        var drawBeaconOnMap = function(beaconArray) { 
+
+            $("#beaconArea").html("");
+            console.log("beaconArray.length="+beaconArray.length);
+
+            if(calcWidth==0 || beaconArray.length==0)
+              return;
+
+            var deltaDegree=360/beaconArray.length;
+
+            for(var i=0;i<beaconArray.length;i++) 
+            {    
+              var distance = pxDisplayValue[beaconArray[i].px]*(calcWidth/250)
+
+              var dx = distance*  Math.cos((deltaDegree*i+30) / 180 * Math.PI);
+              var dy = distance*  Math.sin((deltaDegree*i+30) / 180 * Math.PI);
+
+              $("#beaconArea").append("<div class=\"beaconItem\" id=\"beaconItem-"+i+"\">"+beaconArray[i].name+"</div>");
+              $("#beaconItem-"+i).css("left",(calcWidth+dx-10)+"px");
+              $("#beaconItem-"+i).css("top",(calcWidth+dy-12)+"px");
+            }
+
+        } 
+
+        beaconManager.onBeaconChanged(drawBeaconOnMap);
+
+
+
+        function viewOrientationChanged()
+        {
+          //console.log("viewOrientationChanged called");
+          //setTimeout(viewSizeChanged,2000);
+        }
+
+        function viewSizeChanged()
+        {
+
+          adjustScreen();
+          adjustBgImage();
+          drawBeaconOnMap(beaconManager.getBeaconArray());
+        }
+
+        function adjustBgImage()
+        {
+            $("#beaconRangeMap").css("width",calcWidth*2+"px");
+            $("#beaconRangeMap").css("height",calcWidth*2+"px");
+        }
+
+        function adjustScreen()
+        {
+           $("#mainArea").hide();
+           $("#beaconArea").hide();
+           windowWidth = $(window).width();
+           windowHeight= $(window).height();
+
+          if(windowHeight > windowWidth)
+          {
+            calcWidth = windowWidth/2;
+            calcCenter.x = calcWidth;
+            calcCenter.y = windowHeight/2;
+
+            $("#mainArea").css("width",calcWidth*2+"px");
+            $("#mainArea").css("height",calcWidth*2+"px");
+
+            $("#mainArea").css("top",(calcCenter.y-calcWidth)+"px");
+            $("#mainArea").css("left","0px");
+
+            $("#beaconArea").css("width",calcWidth*2+"px");
+            $("#beaconArea").css("height",calcWidth*2+"px");
+
+            $("#beaconArea").css("top",(calcCenter.y-calcWidth)+"px");
+            $("#beaconArea").css("left","0px");
+            
+            $("#mainArea").fadeIn();
+            $("#beaconArea").fadeIn();
+          }
+          else
+          {
+            calcWidth = windowHeight/2;
+            calcCenter.y = calcWidth;
+            calcCenter.x = windowWidth/2;
+
+            $("#mainArea").css("width",calcWidth*2+"px");
+            $("#mainArea").css("height",calcWidth*2+"px");
+
+            $("#mainArea").css("left",(calcCenter.x-calcWidth)+"px");
+            $("#mainArea").css("top","0px");
+
+            $("#beaconArea").css("width",calcWidth*2+"px");
+            $("#beaconArea").css("height",calcWidth*2+"px");
+
+            $("#beaconArea").css("left",(calcCenter.x-calcWidth)+"px");
+            $("#beaconArea").css("top","0px");
+
+            $("#mainArea").fadeIn();
+            $("#beaconArea").fadeIn();
+          }
+        }
+
+        var oldWindowWidth=0;
+
+        function windowSizeMonitor()
+        {
+          if(oldWindowWidth!=$(window).width())
+          {
+            oldWindowWidth = $(window).width();
+            viewSizeChanged();
+          }
+          setTimeout(windowSizeMonitor,1000);
+        }
+
+        $(window).load(function() {
+
+            // adjust beacon and calc
+
+            // handle OrientationChange (Mobile), windows Size Change (Desktop), not work in iOS iframe
+            // var supportsOrientationChange = "onorientationchange" in window;
+            /*
+            if(supportsOrientationChange)
+            {
+              window.onorientationchange = viewOrientationChanged;
+            }
+            else
+            {
+              console.log("document resized event");
+              $( window ).resize(viewSizeChanged);
+            }
+            */
+
+            oldWindowWidth = $(window).width();
+            setTimeout(windowSizeMonitor,1000);
+
+            $("#mainArea").html("<img src=\"ibeacon-map.png\" id=\"beaconRangeMap\" />");
+
+            adjustScreen();
+
+            $("#mainArea img").load(function ()
+            {
+              adjustBgImage();
+            });
+
+            beaconManager.init();
+        })
+
+
+		</script>
+	
+	</head>
+	<body>
+  <h2>Sample 03: Beacon Range Map </h2>
+
+  <div id="mainArea">
+  </div>
+
+   <div id="beaconArea">
+  </div>
+
+	</body>
+</html>
