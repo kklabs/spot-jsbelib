@@ -18,11 +18,14 @@ Usage
 -----
 
 Create the instance.
+
 	var beaconManager=new spotJsBEL();
 
 Set the evnet handler.
 
-	var beaconHandler = function(beaconArray) { }; 
+	var beaconHandler = function(beaconArray) {
+		// Do-Something with beaocn array
+	};
 	beaconManager.onBeaconChanged(beaconHandler);
 
 
@@ -35,11 +38,11 @@ Initialize the instance after dom ready.
 Beacon Array
 ------------
 
-When beacon changed event callback function called, it passed a beacon array as parameter.
+When beaconChanged event callback function is called, it passed a beacon array as parameter.
 
-beacon array contains json objects to preset the deteced beacon data:
+beacon array contains json objects to preset the detected beacon data:
 {id:<String>, name: <String>, px: <Number> }
-* id and name: using by Spot cloud service, or your own defination.
+* id and name: using by Spot cloud service, or your own definition.
 * px: based on Apple's iBeacon specification, proximity values indicate:
 	* 0 : Unknown (> 30 m )
     * 1 : Immediate (< 50 cm)
