@@ -38,11 +38,11 @@ Initialize the instance after dom ready.
 Beacon Array
 ------------
 
-When callback function of "The beacon event”  is called, a beacon array is passed as a parameter.
+When callback function of "the beacon event"  is called, a beacon array is passed as a parameter.
 
 Beacon array contains json objects which comprises the detected beacon data:
 
-{id:<String>, name: <String>, px: <Number> }
+	{id:<String>, name: <String>, px: <Number> }
 
 * id and name: by your own definition or assigned by Spot Project Hub
 * px: based on Apple's iBeacon specification, proximity values indicate:
