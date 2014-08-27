@@ -6,9 +6,10 @@
   // KKlabs Inc.
   //
   // Author: Geoffrey Wang
-  // v1.0.0526 (2014/5/26)
+  // v1.1.0822  (2014/8/22)
   // 
   // resivion:
+  //   v1.1.0822 Fix uriencode issue 
   //   v1.0.0526 Initial Public Release
   //
   //  This library is under Apache License, Version 2.0 , 
@@ -87,7 +88,7 @@
 
         $(window).on('hashchange', processBeaconData , function(e){ 
             var that = e.data;
-            var beaconString = location.hash.slice(1);          
+            var beaconString = decodeURIComponent(location.hash.slice(1));         
             that(beaconString);
         });
     };
