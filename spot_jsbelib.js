@@ -6,9 +6,11 @@
   // KKlabs Inc.
   //
   // Author: Geoffrey Wang
-  // v1.1.0822  (2014/8/22)
+  // v1.2.0213  (2015/2/13)
   // 
   // resivion:
+  //
+  //   v1.2.0213 Support CustomUserId
   //   v1.1.0822 Fix uriencode issue 
   //   v1.0.0526 Initial Public Release
   //
@@ -26,6 +28,8 @@
     var isBeaconSupport=0;
     var isBTurnOn=0;
     var userCallBeacon = null;
+    var userUidRec=null;
+    var custometToken="";
     var beaconData=[];
 
     this.ConstProximityUnknown=0;
@@ -72,6 +76,18 @@
     }
 
 
+    // [NEW v1.2] public API: set callback function on receive custom user id 
+    //
+    // A customUserId will pass back to callback function:
+    //
+    // callbackfunction( <string> )
+    //
+    //
+    this.onCustomUserIdReceived = function ( callbackfunction )
+    {
+      userUidRec=callbackfunction;
+    }
+
     // public API: get current beaconArray 
     //
     // same structure as onBeaconChanged callback function  
@@ -105,17 +121,31 @@
     // *
     // *************************************
 
+
     // private: process the beacon event
     var processBeaconData = function (beaconString)
     {
 
       var receviedData={};
-
+      var receviedCustometToken="";
+      
       try {
         receviedData = JSON.parse(beaconString);
         beaconData = receviedData.b;
         isBeaconSupport = receviedData.d;
         isBTurnOn = receviedData.o;
+
+        if(receviedData.hasOwnProperty("t"))
+          receviedCustometToken = receviedData.t;
+
+        if(receviedCustometToken != custometToken)
+        {
+            custometToken = receviedCustometToken;
+
+            if(userUidRec!=null)
+              userUidRec(custometToken);
+        }
+
       } catch (e) {
         beaconData = [];
       }
