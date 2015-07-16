@@ -6,10 +6,11 @@
   // KKlabs Inc.
   //
   // Author: Geoffrey Wang
-  // v1.2.0213  (2015/2/13)
+  // v1.3.0529  (2015/5/29)
   // 
   // resivion:
   //
+  //   v1.3.0529 Support Camera API
   //   v1.2.0213 Support CustomUserId
   //   v1.1.0822 Fix uriencode issue 
   //   v1.0.0526 Initial Public Release
@@ -29,7 +30,9 @@
     var isBTurnOn=0;
     var userCallBeacon = null;
     var userUidRec=null;
+    var userPhotoRec=null;
     var custometToken="";
+    var custometPhoto="";
     var beaconData=[];
 
     this.ConstProximityUnknown=0;
@@ -88,6 +91,40 @@
       userUidRec=callbackfunction;
     }
 
+    // [NEW v1.3] public API: set callback function on receive camera photo
+    //
+    // A photo data will pass back to callback function:
+    //
+    // callbackfunction( <string> )
+    //
+    //
+
+    this.requestPhotoCamera = function (w,h,resultback)
+    {
+        var imageSizeWidth=0;
+        var imageSizeHeight=0;
+
+        if(resultback!=null)
+          userPhotoRec = resultback;
+        else
+          userPhotoRec =null;
+
+        if(!isNaN(w) && !isNaN(h))
+        {
+          imageSizeWidth = Math.round(Number(w));
+          imageSizeHeight = Math.round(Number(h));
+        }
+
+        console.log("takePhoto?"+imageSizeWidth+","+imageSizeHeight);
+
+        if( getURLParameter("simu")=="null" && ( navigator.userAgent.search('Android')!=-1 || navigator.userAgent.search('iPhone')!=-1 || navigator.userAgent.search('iPad')!=-1 ) )
+        {
+              location.href="viaduct://takePhoto?"+imageSizeWidth+","+imageSizeHeight;
+        }
+
+
+    }
+
     // public API: get current beaconArray 
     //
     // same structure as onBeaconChanged callback function  
@@ -121,6 +158,15 @@
     // *
     // *************************************
 
+    // get URL parameter
+
+    function getURLParameter (name) 
+      {
+        return decodeURI(
+                  (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+              );
+      };
+
 
     // private: process the beacon event
     var processBeaconData = function (beaconString)
@@ -128,7 +174,8 @@
 
       var receviedData={};
       var receviedCustometToken="";
-      
+      var receviedCustometPhoto="";
+
       try {
         receviedData = JSON.parse(beaconString);
         beaconData = receviedData.b;
@@ -145,6 +192,24 @@
             if(userUidRec!=null)
               userUidRec(custometToken);
         }
+
+        if(receviedData.hasOwnProperty("pt"))
+          receviedCustometPhoto = receviedData.pt;
+
+        if(receviedCustometPhoto != custometPhoto)
+        {
+            custometPhoto = receviedCustometPhoto;
+
+            if(userPhotoRec!=null)
+            {
+              if(custometPhoto!="0" && custometPhoto!="")
+                 userPhotoRec("data:image/jpg;base64,"+custometPhoto);
+               else
+                 userPhotoRec("0");
+            }
+        }
+
+
 
       } catch (e) {
         beaconData = [];
