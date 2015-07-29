@@ -1,0 +1,215 @@
+
+<!--
+  // ********************************************************************
+  //
+  // HTML for KKLab SPOT jsBel Sample Project
+  // Author: Geoffrey Wang
+  //
+  // resivion:
+  //   - 1.0.0: initial version
+  //
+  // ********************************************************************
+-->
+
+<!DOCTYPE html>
+<head>
+  <!-- Standard Meta -->
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Mobile App Meta-->
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Site Properities -->
+  <title>iBeacon Smart Patrol Sample Code</title>
+
+  <!-- Style Sheet: semantic-UI and local -->
+  <link rel="stylesheet" type="text/css" href="sample_style.css">
+
+  <!-- Javascript Lib: jQuery and plugins -->
+  <script type="text/javascript" src="jquery.min.js"></script>
+
+
+  <!-- Javascript Lib: kklabs -->
+  <script src="spot_jsbelib.js"></script>
+    
+  <script type="text/javascript">
+  
+        // create beaconManager instance
+        var beaconManager=new spotJsBEL();
+
+        // init beaconManager
+        beaconManager.init();
+
+        var lastNearestArea=0;
+
+        // define beacon event handler
+        var beaconHandler = function(beaconArray) { 
+            
+
+            // traversal each beacon data and determine which area is nearest
+
+            var nearestArea=0;
+
+            for(var i=0;i<beaconArray.length;i++) 
+            {      
+
+              if(beaconArray[i].name=="area01" && beaconArray[i].px==1 )
+              {
+                nearestArea=1;
+
+              }
+              else if(beaconArray[i].name=="area02" && beaconArray[i].px==1)
+              {
+                nearestArea=2;
+
+              }
+              else if(beaconArray[i].name=="area03" && beaconArray[i].px==1)
+              {
+                nearestArea=3;
+                
+
+              }
+              
+            }
+
+            var locationDisplayName = ["front door","hall","kitchen"];
+
+            // hightlight the nearest area
+            if(nearestArea!=0)
+            {
+              lastNearestArea=nearestArea;
+              $(".itemArea").removeClass("currentArea");
+              $("#itemArea"+nearestArea).addClass("currentArea");
+
+              $("#locationName").html(locationDisplayName[nearestArea-1]);
+            }
+            else
+            {
+              $(".itemArea").removeClass("currentArea");
+            }
+        } 
+
+        var imgCounter=0;
+
+        function takePhoto()
+        {
+            beaconManager.requestPhotoCamera(600,600, function(result) {
+              
+              if(result!="0" && lastNearestArea!=0 )
+              {
+                   $("#imageArea"+lastNearestArea).append("<img id='p"+imgCounter+"' style='width: 80vw;padding: 5px;'>");
+                   $("#p"+imgCounter).attr("src",result);
+                   imgCounter++;
+              }
+            });
+        }
+
+        // set beacon event handler as callback function
+        beaconManager.onBeaconChanged(beaconHandler);
+
+        $(window).load(function() {
+
+            // init beaconManager
+            beaconManager.init();
+
+        })
+
+    </script>
+</head>
+<body>
+
+  <h3>iBeacon Smart Patrol </h3>
+
+  Your current location: <span id="locationName">unknown</span>
+  <br/>
+  <input type="button" onclick="takePhoto()" value="take a photo"/>
+  <hr/>
+  <div id="itemArea1" class="itemArea">
+    Question 1:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/><br/>
+    Question 2:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/><br/>
+    Question 3:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/>
+    <div id="imageArea1"></div>
+  </div>
+
+  <br/>
+
+  <div id="itemArea2" class="itemArea">
+    Question 4:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/><br/>
+    Question 5:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/><br/>
+    Question 6:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/>
+    <div id="imageArea2"></div>
+  </div>
+
+  <br/>
+
+
+  <div id="itemArea3" class="itemArea">
+    Question 7:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/><br/>
+    Question 8:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/><br/>
+    Question 9:
+    <select>
+      <option value="">TBS</option>
+      <option value="normal">Normal</option>
+      <option value="fc">Further Check</option>
+    </select>
+    <br/>
+    <div id="imageArea3"></div>
+  </div>
+
+  <br/>
+
+</body>
+
+</html>
