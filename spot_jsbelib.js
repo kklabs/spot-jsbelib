@@ -6,10 +6,11 @@
   // KKlabs Inc.
   //
   // Author: Geoffrey Wang
-  // v1.3.0529  (2015/5/29)
+  // v1.4.1126  (2015/11/26)
   // 
   // resivion:
   //
+  //   v1.4.1126 Add beacon string parsing error message
   //   v1.3.0529 Support Camera API
   //   v1.2.0213 Support CustomUserId
   //   v1.1.0822 Fix uriencode issue 
@@ -196,12 +197,16 @@
         if(receviedData.hasOwnProperty("pt"))
           receviedCustometPhoto = receviedData.pt;
 
+        
+
         if(receviedCustometPhoto != custometPhoto)
         {
+            
             custometPhoto = receviedCustometPhoto;
 
             if(userPhotoRec!=null)
             {
+              
               if(custometPhoto!="0" && custometPhoto!="")
                  userPhotoRec("data:image/jpg;base64,"+custometPhoto);
                else
@@ -209,9 +214,8 @@
             }
         }
 
-
-
       } catch (e) {
+        console.log("beaconString parse error");
         beaconData = [];
       }
 
