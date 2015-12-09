@@ -150,7 +150,7 @@
     //public API: driectly update beacon (for testing purpose)
     this.updateBeaconData = function(beaconString)
     {
-      processBeaconData(beaconString);
+      processBeaconData(decodeURIComponent(beaconString));
     }
 
     // *************************************
