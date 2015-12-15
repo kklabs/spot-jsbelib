@@ -6,10 +6,11 @@
   // KKlabs Inc.
   //
   // Author: Geoffrey Wang
-  // v1.4.1126  (2015/11/26)
+  // v1.5.1215  (2015/12/15)
   // 
   // resivion:
   //
+  //   v1.5.1215 Fix init beacon string uridecoder
   //   v1.4.1126 Add beacon string parsing error message
   //   v1.3.0529 Support Camera API
   //   v1.2.0213 Support CustomUserId
@@ -138,7 +139,7 @@
     // public API: initialize the beacon service (via hashchange event)
     this.init = function ()
       {        
-        processBeaconData(location.hash.slice(1));
+        processBeaconData(decodeURIComponent(location.hash.slice(1)));
 
         $(window).on('hashchange', processBeaconData , function(e){ 
             var that = e.data;

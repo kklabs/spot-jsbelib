@@ -39,9 +39,17 @@
               var dx = distance*  Math.cos((deltaDegree*i+30) / 180 * Math.PI);
               var dy = distance*  Math.sin((deltaDegree*i+30) / 180 * Math.PI);
 
-              $("#beaconArea").append("<div class=\"beaconItem\" id=\"beaconItem-"+i+"\">"+beaconArray[i].name+"</div>");
+              var text2show=beaconArray[i].name;
+              if(beaconArray[i].hasOwnProperty("description")==true)
+                  text2show=text2show+"<br/>"+beaconArray[i].description;
+
+              $("#beaconArea").append("<div class=\"beaconItem\" id=\"beaconItem-"+i+"\">"+text2show+"</div>");
               $("#beaconItem-"+i).css("left",(calcWidth+dx-10)+"px");
               $("#beaconItem-"+i).css("top",(calcWidth+dy-12)+"px");
+
+              
+
+
             }
 
         } 
